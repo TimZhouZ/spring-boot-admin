@@ -54,15 +54,15 @@ public class MicrosoftTeamsNotifier extends AbstractStatusChangeNotifier {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MicrosoftTeamsNotifier.class);
 
-	private static final String STATUS_KEY = "Status";
+	public static final String STATUS_KEY = "Status";
 
-	private static final String SERVICE_URL_KEY = "Service URL";
+	public static final String SERVICE_URL_KEY = "Service URL";
 
-	private static final String HEALTH_URL_KEY = "Health URL";
+	public static final String HEALTH_URL_KEY = "Health URL";
 
-	private static final String MANAGEMENT_URL_KEY = "Management URL";
+	public static final String MANAGEMENT_URL_KEY = "Management URL";
 
-	private static final String SOURCE_KEY = "Source";
+	public static final String SOURCE_KEY = "Source";
 
 	private static final String DEFAULT_THEME_COLOR_EXPRESSION = "#{event.type == 'STATUS_CHANGED' ? (event.statusInfo.status=='UP' ? '6db33f' : 'b32d36') : '439fe0'}";
 

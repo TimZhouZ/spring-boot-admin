@@ -53,14 +53,14 @@ public final class Registration implements Serializable {
 
 	@lombok.Builder(builderClassName = "Builder", toBuilder = true)
 	private Registration(String name, @Nullable String managementUrl, String healthUrl, @Nullable String serviceUrl,
-			String source, @lombok.Singular("metadata") Map<String, String> metadata) {
+						 String source, @lombok.Singular("metadata") Map<String, String> metadata) {
 		Assert.hasText(name, "'name' must not be empty.");
 		Assert.hasText(healthUrl, "'healthUrl' must not be empty.");
 		Assert.isTrue(checkUrl(healthUrl), "'healthUrl' is not valid: " + healthUrl);
 		Assert.isTrue(!StringUtils.hasText(managementUrl) || checkUrl(managementUrl),
-				"'managementUrl' is not valid: " + managementUrl);
+			"'managementUrl' is not valid: " + managementUrl);
 		Assert.isTrue(!StringUtils.hasText(serviceUrl) || checkUrl(serviceUrl),
-				"'serviceUrl' is not valid: " + serviceUrl);
+			"'serviceUrl' is not valid: " + serviceUrl);
 		this.name = name;
 		this.managementUrl = managementUrl;
 		this.healthUrl = healthUrl;

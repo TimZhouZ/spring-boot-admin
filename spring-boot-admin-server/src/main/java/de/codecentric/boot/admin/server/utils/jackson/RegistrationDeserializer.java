@@ -19,6 +19,8 @@ package de.codecentric.boot.admin.server.utils.jackson;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -43,11 +45,22 @@ public class RegistrationDeserializer extends StdDeserializer<Registration> {
 		if (node.hasNonNull("name")) {
 			builder.name(node.get("name").asText());
 		}
+
+		processUrls(node, builder);
+		processMetadata(node, builder);
+
+		if (node.hasNonNull("source")) {
+			builder.source(node.get("source").asText());
+		}
+
+		return builder.build();
+	}
+
+	private void processUrls(JsonNode node, Registration.Builder builder) {
 		if (node.hasNonNull("url")) {
 			String url = node.get("url").asText();
 			builder.healthUrl(url.replaceFirst("/+$", "") + "/health").managementUrl(url);
-		}
-		else {
+		} else {
 			if (node.hasNonNull("healthUrl")) {
 				builder.healthUrl(node.get("healthUrl").asText());
 			}
@@ -58,7 +71,9 @@ public class RegistrationDeserializer extends StdDeserializer<Registration> {
 				builder.serviceUrl(node.get("serviceUrl").asText());
 			}
 		}
+	}
 
+	private void processMetadata(JsonNode node, Registration.Builder builder) {
 		if (node.has("metadata")) {
 			Iterator<Map.Entry<String, JsonNode>> it = node.get("metadata").fields();
 			while (it.hasNext()) {
@@ -66,12 +81,8 @@ public class RegistrationDeserializer extends StdDeserializer<Registration> {
 				builder.metadata(entry.getKey(), entry.getValue().asText());
 			}
 		}
-
-		if (node.hasNonNull("source")) {
-			builder.source(node.get("source").asText());
-		}
-
-		return builder.build();
 	}
+
+
 
 }

@@ -345,7 +345,7 @@ class InstanceExchangeFilterFunctionsTest {
 	@Nested
 	class AddDefaultHeaders {
 
-		private final InstanceExchangeFilterFunction filter = InstanceExchangeFilterFunctions.setDefaultAcceptHeader();
+		private final InstanceExchangeFilterFunction filter = InstanceExchangeFilterFunctions.setDefAcceptHdr();
 
 		@Test
 		void should_add_default_accept_headers() {

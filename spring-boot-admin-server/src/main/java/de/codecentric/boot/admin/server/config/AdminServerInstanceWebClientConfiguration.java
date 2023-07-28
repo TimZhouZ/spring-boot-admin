@@ -109,7 +109,7 @@ public class AdminServerInstanceWebClientConfiguration {
 			@Order(20)
 			@ConditionalOnMissingBean(name = "setDefaultAcceptHeaderInstanceExchangeFilter")
 			public InstanceExchangeFilterFunction setDefaultAcceptHeaderInstanceExchangeFilter() {
-				return InstanceExchangeFilterFunctions.setDefaultAcceptHeader();
+				return InstanceExchangeFilterFunctions.setDefAcceptHdr();
 			}
 
 			@Bean

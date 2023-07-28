@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
+
 package de.codecentric.boot.admin.server.notify;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
+	import java.io.FileNotFoundException;
+	import java.io.IOException;
+	import java.net.URL;
 
-import org.assertj.core.api.WithAssertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.thymeleaf.context.Context;
+	import org.assertj.core.api.WithAssertions;
+	import org.junit.jupiter.api.Test;
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.boot.SpringBootConfiguration;
+	import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+	import org.springframework.boot.test.context.SpringBootTest;
+	import org.thymeleaf.context.Context;
 
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
+	import de.codecentric.boot.admin.server.config.EnableAdminServer;
 
 @SpringBootTest(properties = { "spring.mail.host=localhost", "spring.boot.admin.notify.mail=true" })
 class MailNotifierIntegrationTest implements WithAssertions {
@@ -36,30 +37,31 @@ class MailNotifierIntegrationTest implements WithAssertions {
 	@Autowired
 	MailNotifier mailNotifier;
 
-	@Test
-	void fileProtocolIsNotAllowed() {
+	private void assertFileNotFoundExceptionOnGetBody(String template) {
 		assertThatThrownBy(() -> {
-			URL resource = getClass().getClassLoader().getResource(".");
-			mailNotifier.setTemplate(
-					"file://" + resource.getFile() + "de/codecentric/boot/admin/server/notify/vulnerable-file.html");
+			mailNotifier.setTemplate(template);
 			mailNotifier.getBody(new Context());
 		}).hasCauseInstanceOf(FileNotFoundException.class);
 	}
 
 	@Test
+	void fileProtocolIsNotAllowed() {
+		URL resource = getClass().getClassLoader().getResource(".");
+		String fileTemplate = "file://" + resource.getFile() + "de/codecentric/boot/admin/server/notify/vulnerable-file.html";
+		assertFileNotFoundExceptionOnGetBody(fileTemplate);
+	}
+
+	@Test
 	void httpProtocolIsNotAllowed() {
-		assertThatThrownBy(() -> {
-			URL resource = getClass().getClassLoader().getResource(".");
-			mailNotifier.setTemplate(
-					"https://raw.githubusercontent.com/codecentric/spring-boot-admin/gh-pages/vulnerable-file.html");
-			mailNotifier.getBody(new Context());
-		}).hasCauseInstanceOf(FileNotFoundException.class);
+		String httpTemplate = "https://raw.githubusercontent.com/codecentric/spring-boot-admin/gh-pages/vulnerable-file.html";
+		assertFileNotFoundExceptionOnGetBody(httpTemplate);
 	}
 
 	@Test
 	void classpathProtocolIsAllowed() throws IOException {
 		assertThatThrownBy(() -> {
-			mailNotifier.setTemplate("/de/codecentric/boot/admin/server/notify/vulnerable-file.html");
+			String classpathTemplate = "/de/codecentric/boot/admin/server/notify/vulnerable-file.html";
+			mailNotifier.setTemplate(classpathTemplate);
 			String body = mailNotifier.getBody(new Context());
 		}).rootCause().hasMessageContaining("error=2, No such file or directory");
 	}
